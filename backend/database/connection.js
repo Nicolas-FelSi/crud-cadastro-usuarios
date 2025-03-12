@@ -1,4 +1,6 @@
-import { Client } from "pg";
+import pg from "pg";
+
+const { Client } = pg;
 
 class Database {
     constructor() {
@@ -35,4 +37,4 @@ class Database {
     }
 }
 
-module.exports = new Database();
+export default new Database();
