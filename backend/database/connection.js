@@ -1,7 +1,9 @@
 import pg from "pg";
+import dotenv from "dotenv"
+
+dotenv.config();
 
 const { Client } = pg;
-
 class Database {
     constructor() {
         this.client = new Client({
