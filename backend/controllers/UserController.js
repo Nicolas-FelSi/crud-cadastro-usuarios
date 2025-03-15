@@ -1,4 +1,4 @@
-import UserModels from "../models/UserModels";
+import UserModels from "../models/UserModels.js";
 
 class UserController {
   async list(req, res) {
