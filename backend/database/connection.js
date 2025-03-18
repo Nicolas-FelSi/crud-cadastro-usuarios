@@ -3,11 +3,11 @@ import dotenv from "dotenv"
 
 dotenv.config();
 
-const { Client } = pg;
+const { Pool } = pg;
 
 class Database {
     constructor() {
-        this.client = new Client({
+        this.pool = new Pool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             port: process.env.DB_PORT,
@@ -18,7 +18,7 @@ class Database {
 
     async connect() {
         try {
-            await this.client.connect();
+            await this.pool.connect();
             console.log("Banco conectado com sucesso.");
         } catch (error) {
             console.log("Erro de conexão com o banco de dados: " + error.stack);
@@ -28,15 +28,12 @@ class Database {
 
     async query(sql, params = []) {
         try {
-            await this.client.query(sql, params);
+            const result = await this.pool.query(sql, params);
+            return result.rows
         } catch (error) {
             console.log("Erro na consulta SQL: " + error.stack);
             throw new Error("Erro na consulta SQL.");
         }
-    }
-
-    async close() {
-        await this.client.end();
     }
 }
 
