@@ -26,7 +26,7 @@ class UserController {
       }
 
       if (errors.length !== 0) {
-        res.status(400).json(errors)
+        res.status(400).json({ errors })
         return;
       }
       
@@ -88,7 +88,13 @@ class UserController {
     }
 
     try {
-      await UserModels.updateUser(id, name, email, password);
+      const updatedUser = await UserModels.updateUser(id, name, email, password);
+
+      if (updatedUser.length === 0) {
+        res.status(400).json({ message: "Usuário não encontrado" });
+        return;
+      }
+
       res.json({ message: "Usuário atualizado com sucesso." })
     } catch (error) {
       res.status(400).json({ error });
@@ -97,9 +103,25 @@ class UserController {
 
   async delete(req, res) {
     const { id } = req.params;
+    const errors = [];
+
+    if (isNaN(id)) {
+      errors.push("Formato do ID inválido.");
+    }
 
     try {
-      return await UserModels.deleteUser(id);
+      const deletedUser = await UserModels.deleteUser(id);
+
+      if (deletedUser.length === 0) {
+        errors.push("Usuário não encontrado.");
+      }
+
+      if (errors.length !== 0) {
+        res.status(400).json({ errors });
+        return;
+      }
+
+      res.json({ message: "Usuário deletado com sucesso." });
     } catch (error) {
       res.status(400).json({ error });
     }
